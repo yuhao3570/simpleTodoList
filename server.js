@@ -1,7 +1,7 @@
 const express = require('express');
 const { existTodoID, removeTODO, updateTODO } = require('./helpers/helperFunctions');
 let TODOS = require('./models/data');
-const PORT = 3000;
+const PORT = process.env.PORT;
 const app = express();
 
 app.use(express.json());
