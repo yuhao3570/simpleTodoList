@@ -1,10 +1,14 @@
 const express = require('express');
 const { existTodoID, removeTODO, updateTODO } = require('./helpers/helperFunctions');
 let TODOS = require('./models/data');
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
+
+var cors = require('cors')
 const app = express();
 
+app.use(cors())
 app.use(express.json());
+app.use(express.static('public'));
 
 app.get('/todos', (req, res) => {
   res.status(200).json(TODOS);
@@ -12,12 +16,14 @@ app.get('/todos', (req, res) => {
 
 app.post('/todos', (req, res) => {
   let {id, text, done} = req.body;
-  if(!text){
+  if(!text || !id){
     res.status(400).send('Missing todo content');
+    return;
   }
   
   if(existTodoID(id, TODOS)){
     res.status(409).send('Caution, duplicate todo id!');
+    return;
   }
 
   if(done === undefined){
